@@ -1,0 +1,361 @@
+-- Crear la base de datos
+CREATE DATABASE military_triton;
+
+-- Usar la base de datos
+USE military_triton;
+
+-- Crear la tabla de productos
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    main_image VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL
+);
+
+-- Crear la tabla de imágenes de productos
+CREATE TABLE product_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    color VARCHAR(50),
+    image_url VARCHAR(255),
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Crear la tabla de imágenes de colores (thumbnails)
+CREATE TABLE color_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    color VARCHAR(50),
+    color_image_url VARCHAR(255),
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Crear la tabla de tallas de productos
+CREATE TABLE product_sizes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    size VARCHAR(10),
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- Crear la tabla de categorías
+CREATE TABLE categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Crear la tabla de relación entre productos y categorías (muchos a muchos)
+CREATE TABLE product_categories (
+    product_id INT,
+    category_id INT,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+);
+
+-- Insertar algunos valores de prueba en la tabla de categorías
+INSERT INTO categories (name) VALUES ('PANTALONES');
+INSERT INTO categories (name) VALUES ('CAMISAS');
+INSERT INTO categories (name) VALUES ('GORROS');
+INSERT INTO categories (name) VALUES ('ACCESORIOS');
+
+
+INSERT INTO products (id, name, price, main_image, description) VALUES
+(2, 'Delta Tactical Pants', 199.99, 'https://via.placeholder.com/400', 'Pantalones tácticos ligeros diseñados para movilidad y durabilidad en cualquier entorno.'),
+(3, 'Stealth Operator Jacket', 249.99, 'https://via.placeholder.com/400', 'Chaqueta operativa de alto rendimiento, resistente al agua y diseñada para actividades tácticas.'),
+(4, 'Recon Combat Shirt', 149.99, 'https://via.placeholder.com/400', 'Camisa de combate ultraligera con protección UV, ideal para operaciones de reconocimiento.'),
+(5, 'Alpha Combat Boots', 179.99, 'https://via.placeholder.com/400', 'Botas de combate con suela antideslizante y protección para terrenos difíciles.'),
+(6, 'Bravo Tactical Gloves', 49.99, 'https://via.placeholder.com/400', 'Guantes tácticos con refuerzo en los nudillos, ideales para combate cuerpo a cuerpo.'),
+(7, 'Charlie Assault Pack', 129.99, 'https://via.placeholder.com/400', 'Mochila táctica con múltiples compartimentos, perfecta para misiones de asalto.');
+
+INSERT INTO product_images (product_id, color, image_url) VALUES
+(2, 'Black', 'https://via.placeholder.com/500/000000'),
+(2, 'Green', 'https://via.placeholder.com/500/008000'),
+(3, 'Grey', 'https://via.placeholder.com/500/808080'),
+(3, 'Blue', 'https://via.placeholder.com/500/0000ff'),
+(4, 'Camo', 'https://via.placeholder.com/500/556b2f'),
+(4, 'Tan', 'https://via.placeholder.com/500/d2b48c'),
+(5, 'Black', 'https://via.placeholder.com/500/000000'),
+(5, 'Brown', 'https://via.placeholder.com/500/a52a2a'),
+(6, 'Green', 'https://via.placeholder.com/500/008000'),
+(6, 'Grey', 'https://via.placeholder.com/500/808080'),
+(7, 'Camo', 'https://via.placeholder.com/500/556b2f'),
+(7, 'Black', 'https://via.placeholder.com/500/000000');
+
+
+INSERT INTO color_images (product_id, color, color_image_url) VALUES
+(2, 'Black', 'https://via.placeholder.com/50/000000'),
+(2, 'Green', 'https://via.placeholder.com/50/008000'),
+(3, 'Grey', 'https://via.placeholder.com/50/808080'),
+(3, 'Blue', 'https://via.placeholder.com/50/0000ff'),
+(4, 'Camo', 'https://via.placeholder.com/50/556b2f'),
+(4, 'Tan', 'https://via.placeholder.com/50/d2b48c'),
+(5, 'Black', 'https://via.placeholder.com/50/000000'),
+(5, 'Brown', 'https://via.placeholder.com/50/a52a2a'),
+(6, 'Green', 'https://via.placeholder.com/50/008000'),
+(6, 'Grey', 'https://via.placeholder.com/50/808080'),
+(7, 'Camo', 'https://via.placeholder.com/50/556b2f'),
+(7, 'Black', 'https://via.placeholder.com/50/000000');
+
+INSERT INTO product_sizes (product_id, size) VALUES
+(2, 'S'), (2, 'M'), (2, 'L'), (2, 'XL'),
+(3, 'S'), (3, 'M'), (3, 'L'), (3, 'XL'),
+(4, 'S'), (4, 'M'), (4, 'L'), (4, 'XL'),
+(5, 'S'), (5, 'M'), (5, 'L'), (5, 'XL'),
+(6, 'S'), (6, 'M'), (6, 'L'), (6, 'XL'),
+(7, 'S'), (7, 'M'), (7, 'L'), (7, 'XL');
+
+INSERT INTO categories (id, name) VALUES
+(1, 'Pantalones'),
+(2, 'Camisas'),
+(3, 'Chaquetas'),
+(4, 'Botas'),
+(5, 'Accesorios'),
+(6, 'Guantes'),
+(7, 'Mochilas');
+
+INSERT INTO product_categories (product_id, category_id) VALUES
+(2, 1),  -- Pantalones
+(3, 3),  -- Chaquetas
+(4, 2),  -- Camisas
+(5, 4),  -- Botas
+(6, 6),  -- Guantes
+(7, 7);  -- Mochilas
+
+
+ SELECT 
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        p.main_image,
+        p.description,
+        
+        -- Categorías del producto
+        GROUP_CONCAT(DISTINCT c.name SEPARATOR ', ') AS categories
+
+      FROM 
+        products p
+
+      -- Unir la relación entre productos y categorías
+      LEFT JOIN product_categories pc ON p.id = pc.product_id
+
+      -- Unir la tabla de categorías
+      LEFT JOIN categories c ON pc.category_id = c.id
+
+      -- Filtrar por categoría
+      WHERE c.name = GORROS
+
+      GROUP BY p.id
+    `;
+
+
+
+import { NextResponse } from "next/server";
+import { conn } from "@/libs/mysql";
+
+export async function GET(request, { params }) {
+  const { category } = params;
+
+  try {
+    const query = `
+      SELECT 
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        p.main_image,
+        p.description
+      FROM 
+        products p
+      JOIN product_categories pc ON p.id = pc.product_id
+      JOIN categories c ON pc.category_id = c.id
+      WHERE c.name = ?
+    `;
+    
+    // Ejecutar la consulta
+    const result = await conn.query(query, [category]); // Notar que ya no uso destructuración
+
+    // Verificar qué es lo que devuelve 'result'
+    console.log(result); // Esto imprimirá todo el objeto devuelto por conn.query()
+
+    // Si 'result' tiene el formato esperado (array de resultados)
+    const [rows] = result;
+    console.log(`Número de productos encontrados: ${rows.length}`);
+    console.log(rows);
+
+    if (rows.length === 0) {
+      return NextResponse.json(
+        {
+          message: "No se encontraron productos en esta categoría",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    // Devolver todos los productos encontrados
+    return NextResponse.json(rows);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: error.message,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+
+
+
+
+export async function getGorros() {
+  try {
+    const query = `
+      SELECT 
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        p.main_image,
+        p.description
+      FROM 
+        products p
+      JOIN product_categories pc ON p.id = pc.product_id
+      JOIN categories c ON pc.category_id = c.id
+      WHERE c.name = 'GORROS'
+    `;
+    const [result] = await conn.query(query);
+
+    console.log(`Número de productos encontrados: ${result.length}`);
+    console.log(result); // Esto imprimirá todos los productos encontrados en la consola
+
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// Función para obtener productos de la categoría "Chaquetas"
+export async function getChaquetas() {
+  try {
+    const query = `
+      SELECT 
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        p.main_image,
+        p.description
+      FROM 
+        products p
+      JOIN product_categories pc ON p.id = pc.product_id
+      JOIN categories c ON pc.category_id = c.id
+      WHERE c.name = 'Chaquetas'
+    `;
+    const [result] = await conn.query(query);
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// Función para obtener productos de la categoría "Pantalones"
+export async function getPantalones() {
+  try {
+    const query = `
+      SELECT 
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        p.main_image,
+        p.description
+      FROM 
+        products p
+      JOIN product_categories pc ON p.id = pc.product_id
+      JOIN categories c ON pc.category_id = c.id
+      WHERE c.name = 'Pantalones'
+    `;
+    const [result] = await conn.query(query);
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// Función para obtener productos de la categoría "Botas"
+export async function getBotas() {
+  try {
+    const query = `
+      SELECT 
+        p.id AS product_id,
+        p.name AS product_name,
+        p.price,
+        p.main_image,
+        p.description
+      FROM 
+        products p
+      JOIN product_categories pc ON p.id = pc.product_id
+      JOIN categories c ON pc.category_id = c.id
+      WHERE c.name = 'Botas'
+    `;
+    const [result] = await conn.query(query);
+    return result;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// Función principal que maneja las solicitudes GET y elige la función adecuada según la categoría
+export async function GET(request, { params }) {
+  const { category } = params;
+
+  try {
+    let result;
+    switch (category) {
+      case 'Gorros':
+        result = await getGorros();
+        break;
+      case 'Chaquetas':
+        result = await getChaquetas();
+        break;
+      case 'Pantalones':
+        result = await getPantalones();
+        break;
+      case 'Botas':
+        result = await getBotas();
+        break;
+      default:
+        return NextResponse.json(
+          {
+            message: "Categoría no encontrada",
+          },
+          {
+            status: 404,
+          }
+        );
+    }
+
+    if (result.length === 0) {
+      return NextResponse.json(
+        {
+          message: `No se encontraron productos en la categoría ${category}`,
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    return NextResponse.json(result);
+  } catch (error) {
+    return NextResponse.json(
+      {
+        message: error.message,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
