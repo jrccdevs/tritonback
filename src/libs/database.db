@@ -359,3 +359,69 @@ export async function GET(request, { params }) {
     );
   }
 }
+
+
+
+
+<div className="product-detail-container">
+{/* Imagen principal del producto */}
+<div className="product-images">
+  <img src={selectedImage} alt={product.product_name} className="main-product-image" />
+  <div className="product-thumbnails">
+  {parseImages(product.product_images).map((image, index) => (
+      <img
+        key={index}
+        src={image.url}
+        alt={`Thumbnail ${index}`}
+        onClick={() => handleThumbnailClick(image.url)}
+        className={`thumbnail ${image.url === selectedImage ? 'active' : ''}`}
+      />
+    ))}
+  </div>
+</div>
+
+{/* Detalle del producto */}
+<div className="product-info">
+  <h1 className="product-name">{product.product_name}</h1>
+  <p className="product-price">${product.price.toFixed(2)}</p>
+  <p className="product-description">{product.description}</p>
+
+  {/* Colores disponibles */}
+  <div className="product-colors">
+    <h3>Colores:</h3>
+    <div className="colors-container">
+    {parseImages(product.product_images).map((image, index) => (
+        <div
+          key={index}
+          className={`color-option ${selectedColor === image.color ? 'selected' : ''}`}
+          style={{ backgroundImage: `url(${product.colorImages[color]})` }}
+          onClick={() => handleColorChange(color)}
+        />
+      ))}
+    </div>
+  </div>
+
+  {/* Tallas disponibles */}
+  <div className="product-sizes">
+    <h3>Tallas:</h3>
+    <div className="sizes">
+      {product.sizes.map((size, index) => (
+        <button
+          key={index}
+          className={`size-option ${selectedSize === size ? 'selected' : ''}`}
+          onClick={() => handleSizeChange(size)}
+        >
+          {size}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {/* Botón de añadir al carrito */}
+  <button className="add-to-cart-button">
+    <FaShoppingCart style={{ marginRight: '8px' }} /> Agregar al carrito
+  </button>
+</div>
+</div>
+);
+};
