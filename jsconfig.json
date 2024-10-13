@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",  // Define el directorio base
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"]  // Define tu alias de rutas
     }
   }
 }
