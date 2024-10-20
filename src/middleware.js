@@ -3,19 +3,17 @@ import { NextResponse } from 'next/server';
 export function middleware(request) {
   const response = NextResponse.next();
 
-  // Obtener el origen de la solicitud
+  // Define los orígenes permitidos
   const allowedOrigins = [
-    'http://localhost:3000', // Desarrollo local
-    'https://triton-blue.vercel.app',
-    'https://tritonback.vercel.app', // Producción
-    'https://api-triton.vercel.app'
+    'http://localhost:3000', // Origen del frontend en desarrollo
+    'https://triton-blue.vercel.app', // Origen de producción
   ];
 
   const origin = request.headers.get('origin');
 
   // Manejar solicitudes preflight OPTIONS
   if (request.method === 'OPTIONS') {
-    response.headers.set('Access-Control-Allow-Origin', '*'); // O usa 'origin' si necesitas restringirlo
+    response.headers.set('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : '*');
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     return response;
