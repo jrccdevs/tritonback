@@ -21,12 +21,18 @@ export function middleware(request) {
   }
 
   // Verificar si el origen está permitido
-  if (allowedOrigins.includes(origin)) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-  } else {
-    console.warn(`Origen no permitido: ${origin}`);
+  if (!allowedOrigins.includes(origin)) {
+    console.error(`Origen no permitido: ${origin}`);
+    return new Response('Origen no permitido', {
+      status: 403,
+      headers: {
+        'Access-Control-Allow-Origin': origin || '*',
+        'Content-Type': 'text/plain',
+      },
+    });
   }
 
+  response.headers.set('Access-Control-Allow-Origin', origin);
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
