@@ -7,7 +7,8 @@ export function middleware(request) {
   const allowedOrigins = [
     'http://localhost:3000', // Desarrollo local
     'https://triton-blue.vercel.app',
-    'https://tritonback.vercel.app' // Producción
+    'https://tritonback.vercel.app', // Producción
+    'https://backend-triton.vercel.app'
   ];
 
   const origin = request.headers.get('origin');
