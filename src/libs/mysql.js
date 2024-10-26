@@ -12,3 +12,14 @@ export const conn = mysql({
     }
 })
 
+
+export async function testConnection() {
+    try {
+        await conn.query('SELECT 1');
+        console.log('Conexión exitosa');
+    } catch (error) {
+        console.error('Error al conectar a la base de datos:', error);
+    }
+}
+
+testConnection();
