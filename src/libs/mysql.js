@@ -7,11 +7,13 @@ export const conn = mysql({
         password: process.env.DB_PASSWORD || "",
         database: process.env.DB_NAME || "boliviandcode_tritondb",
         port: process.env.DB_PORT || 3306,
-        timeout: 10000, // Aumentar el tiempo de espera de la conexión si es necesario
-
+        timeout: 30000,
+        ssl: {
+            rejectUnauthorized: true,
+        },
+        charset: 'utf8mb4_general_ci'
     }
-})
-
+});
 
 export async function testConnection() {
     try {
