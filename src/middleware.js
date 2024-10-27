@@ -8,6 +8,7 @@ export function middleware(request) {
     'http://localhost:3000', // Origen del frontend en desarrollo
     'http://localhost:4001',
     'https://triton-blue.vercel.app', // Origen de producción
+    'https://fluffy-zuccutto-fd26ec.netlify.app',
   ];
 
   const origin = request.headers.get('origin');
