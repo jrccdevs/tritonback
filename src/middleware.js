@@ -6,6 +6,7 @@ export function middleware(request) {
   // Define los orígenes permitidos
   const allowedOrigins = [
     'http://localhost:3000', // Origen del frontend en desarrollo
+    'http://localhost:4001',
     'https://triton-blue.vercel.app', // Origen de producción
   ];
 
