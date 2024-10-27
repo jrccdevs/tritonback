@@ -1,4 +1,4 @@
-import { conn } from 'path/to/your/mysql/connection/file';
+import { conn } from "@/libs/mysql";
 
 export default async function handler(req, res) {
     try {
